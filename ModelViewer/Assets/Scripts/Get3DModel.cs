@@ -76,12 +76,6 @@ public class Get3DModel : MonoBehaviour
         }
     }
     
-    // public GameObject model = null; //The model itself
-    // private List<Transform> segmentTransforms; 
-    // public List<GameObject> segments{get; set;} //The children of the model (ie, its segments)
-    // public Vector3 centrePos{get; protected set;} //how the model should be positioned relative to its parent
-    // public Quaternion centreRot{get; protected set;} //how the model should be orientated relative to its parent
-    
     // async void LoadModel(string filePath) {
     //     Debug.Log("Loading model...");
     //     byte[] data = File.ReadAllBytes(filePath);

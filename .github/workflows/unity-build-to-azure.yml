@@ -1,9 +1,11 @@
 name: Unity - Build
 
-on:
-  push:
-    branches-ignore:
-      - '*'
+# on: 
+#   push:
+#       branches:
+#         - main
+
+on: workflow_dispatch
 
 jobs:
   build:

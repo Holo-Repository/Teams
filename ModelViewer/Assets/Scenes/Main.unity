@@ -1039,6 +1039,8 @@ GameObject:
   - component: {fileID: 926056460}
   - component: {fileID: 926056461}
   - component: {fileID: 926056462}
+  - component: {fileID: 926056463}
+  - component: {fileID: 926056464}
   m_Layer: 0
   m_Name: Target Manager
   m_TagString: Untagged
@@ -1116,6 +1118,31 @@ MonoBehaviour:
   speed: 2.5
   defaultScale: {x: 250, y: 250, z: 250}
   target: {fileID: 919132149187327662}
+--- !u!114 &926056463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926056458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b662f45ce4c65418f37398f8a74214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenshotCamera: {fileID: 0}
+--- !u!114 &926056464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926056458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e560e70b1a1892e478ba3f3ca5a19d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &977430660
 GameObject:
   m_ObjectHideFlags: 0

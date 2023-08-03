@@ -82,6 +82,7 @@ jobs:
       - uses: bacongobbler/azure-blob-storage-upload@main
         with:
           source_dir: build
-          container_name: model-viewer-build
+          container_name: test-model-viewer-build
           connection_string: ${{ secrets.BLOB_CONNECTION_STRING }}
+          extra_args: --content-encoding gzip
           overwrite: 'true'

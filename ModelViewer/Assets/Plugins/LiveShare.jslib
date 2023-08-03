@@ -12,6 +12,10 @@ mergeInto(LibraryManager.library, {
     window.parent.syncLoad(pHid);
   },
 
+  HandleScreenshotDataURL: function(dataURL) {
+    window.parent.handleScreenshotDataURL(dataURL);
+  },
+
   JSConsoleLog: function (str) {
     console.log(UTF8ToString(str));
   }

@@ -35,6 +35,8 @@ public class ModelFetcher : MonoBehaviour {
     ModelRotationController rotationController;
     ModelScaleController scaleController;
 
+    P3dSeamFixer seamFixer;
+
     //JS Interface
     [DllImport("__Internal")]
     private static extern int SyncDownload(string pHid);
@@ -46,6 +48,8 @@ public class ModelFetcher : MonoBehaviour {
         scaleController = GetComponent<ModelScaleController>();
         persistentPath = Application.persistentDataPath;
         Debug.Log(persistentPath);
+
+        seamFixer = (P3dSeamFixer)(ScriptableObject.CreateInstance("P3dSeamFixer"));
 
         //Placeholder Hardcode
         hid = "lung1"; 
@@ -166,7 +170,7 @@ public class ModelFetcher : MonoBehaviour {
             MakePaintableChild(child.gameObject);
         }
 
-        
+        seamFixer.Generate();
     }
 
     void MakePaintableChild(GameObject target) {
@@ -177,6 +181,9 @@ public class ModelFetcher : MonoBehaviour {
         target.AddComponent<P3dPaintableTexture>();
         target.AddComponent<P3dMaterialCloner>();
         target.AddComponent<MeshCollider>();
+
+        seamFixer.AddMesh(target.GetComponent<MeshFilter>().mesh);
+        
     }
 
 

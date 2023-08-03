@@ -9,13 +9,17 @@ public class DeleteDialogue : MonoBehaviour {
     public void OnConfirmButtonPressed() {
         Debug.Log("Confirm Pressed");
         buttonHandler.HandleDeletion();
-        
+        SetDelInactive();
         Destroy(gameObject);
     }
 
     public void OnCancelButtonPressed() {
         Debug.Log("Cancel Pressed");
-        
+        SetDelInactive();
         Destroy(gameObject);
+    }
+
+    public void SetDelInactive() {
+        buttonHandler.SetDeleteActive(false);
     }
 }

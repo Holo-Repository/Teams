@@ -20,6 +20,7 @@ public class ButtonHandler : MonoBehaviour {
 
     // Params
     bool saveActive = false;
+    bool delActive = false;
     int currentWaypoint = 0;
 
     OverwriteDialog overwriteDialog;
@@ -47,6 +48,10 @@ public class ButtonHandler : MonoBehaviour {
                 overwriteDialog = null;
             }
         }
+    }
+
+    public void SetDeleteActive(bool state) {
+        delActive = state;
     }
 
     private void SpawnAddButton() {
@@ -137,6 +142,10 @@ public class ButtonHandler : MonoBehaviour {
     }
 
     public void OnDeleteButtonPressed() {
+        if (delActive) { return; }
+
+        delActive = true;
+
         Button parentWaypoint = deleteButton;
 
         // Spawn the Deletion Dialogue

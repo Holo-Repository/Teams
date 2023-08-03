@@ -101,8 +101,10 @@ public class ButtonHandler : MonoBehaviour {
 
         OverwriteDialog newDialog = Instantiate(overwriteDialogPrefab);
         newDialog.Index = waypoints.Count;
+        newDialog.GetComponent<RectTransform>().anchorMin = new Vector2(1f, 0.5f);
+        newDialog.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0.5f);
         newDialog.transform.SetParent(parentWaypoint.transform);
-        newDialog.transform.position = parentWaypoint.transform.position + new Vector3(-111,7,0);
+        newDialog.GetComponent<RectTransform>().anchoredPosition = parentWaypoint.GetComponent<RectTransform>().anchoredPosition + new Vector2(-108, 113);
         newDialog.name = $"Overwrite {currentWaypoint}";
         newDialog.transform.localScale = Vector3.one;
 
@@ -137,9 +139,14 @@ public class ButtonHandler : MonoBehaviour {
     public void OnDeleteButtonPressed() {
         Button parentWaypoint = deleteButton;
 
+        // Spawn the Deletion Dialogue
         DeleteDialogue newDialog = Instantiate(deleteDialogPrefab);
+
+        // Set Anchor Values
+        newDialog.GetComponent<RectTransform>().anchorMin = new Vector2(1f, 0.5f);
+        newDialog.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0.5f);
         newDialog.transform.SetParent(parentWaypoint.transform);
-        newDialog.transform.position = parentWaypoint.transform.position + new Vector3(-170, 8, 0);
+        newDialog.GetComponent<RectTransform>().anchoredPosition = parentWaypoint.GetComponent<RectTransform>().anchoredPosition + new Vector2(-81, 55);
         newDialog.name = $"Delete Dialogue";
         newDialog.transform.localScale = Vector3.one;
     }

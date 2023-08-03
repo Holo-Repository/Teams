@@ -58,6 +58,7 @@ public class ButtonHandler : MonoBehaviour {
         // Spawn the Add Button
         addButton = Instantiate(addButtonPrefab);
         addButton.transform.SetParent(saveButton.transform);
+        addButton.transform.localScale = Vector3.one;
 
         // Position Add Button relative to current waypoint count
         Vector3 posSpacing = new Vector3(0, -74, 0);
@@ -103,6 +104,7 @@ public class ButtonHandler : MonoBehaviour {
         newDialog.transform.SetParent(parentWaypoint.transform);
         newDialog.transform.position = parentWaypoint.transform.position + new Vector3(-111,7,0);
         newDialog.name = $"Overwrite {currentWaypoint}";
+        newDialog.transform.localScale = Vector3.one;
 
         overwriteDialog = newDialog;
     }
@@ -120,6 +122,7 @@ public class ButtonHandler : MonoBehaviour {
         newWaypoint.transform.position = addButton.transform.position;
         newWaypoint.transform.SetParent(saveButton.transform);
         newWaypoint.name = $"Waypoint {waypoints.Count + 1}";
+        newWaypoint.transform.localScale = Vector3.one;
 
         // Set Waypoint rotation to current rotation
         newWaypoint.Rotation = controller.GetRotation();
@@ -138,6 +141,7 @@ public class ButtonHandler : MonoBehaviour {
         newDialog.transform.SetParent(parentWaypoint.transform);
         newDialog.transform.position = parentWaypoint.transform.position + new Vector3(-170, 8, 0);
         newDialog.name = $"Delete Dialogue";
+        newDialog.transform.localScale = Vector3.one;
     }
 
     public void HandleDeletion() {

@@ -36,6 +36,13 @@ public class ModelFetcher : MonoBehaviour {
     ModelScaleController scaleController;
 
     P3dSeamFixer seamFixer;
+    
+    // define the model type to pass to the JSON utility
+    [Serializable]
+    public class Model {
+        public string hid;
+        public Vector3 rotation;
+    }
 
     public void Start() {
         rotationController = GetComponent<ModelRotationController>();
@@ -50,20 +57,20 @@ public class ModelFetcher : MonoBehaviour {
         //hid = "whole_body_demo";
     }
 
-    public void Download3DModel(string pHid = null, string jsonRotation = null) {
-        // Check hid argument and update
-        if (pHid != null)
-            hid = pHid;
+    public void Download3DModel(string jsonModel) {
+        // Extract the hid and rotation from the JSON object
+        var model = JsonUtility.FromJson<Model>(jsonModel);
+        hid = model.hid;
+        Vector3 rotation = model.rotation;
 
         string url = $"https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/{hid}/download"; 
         fileName = $"{hid}.glb";
-        fullPath = Path.Combine(persistentPath, fileName);
+        fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
-        StartCoroutine(DownloadFile(url, hid, jsonRotation));
+        StartCoroutine(DownloadFile(url, hid, rotation));
     }
 
-    private IEnumerator DownloadFile(string url, string hid, string jsonRotation = null) {
-
+    private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3)) {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
         ProgressBar.fillAmount = 0.1f;
         yield return webRequest.SendWebRequest();
@@ -85,7 +92,7 @@ public class ModelFetcher : MonoBehaviour {
             Debug.Log($"Failed to download file. Error: {webRequest.error}");
         }
 
-        LoadModel(hid, jsonRotation);
+        LoadModel(hid, rotation);
         ProgressBar.fillAmount = 1.0f;
 
         Destroy(ProgressBar);
@@ -95,7 +102,7 @@ public class ModelFetcher : MonoBehaviour {
 
     
 
-    async void LoadModel(string pHid, string jsonRotation = null) {
+    async void LoadModel(string pHid, Vector3 rotation = default(Vector3)) {
         // Check hid argument and update
         // if (pHid != null)
         hid = pHid;
@@ -103,7 +110,7 @@ public class ModelFetcher : MonoBehaviour {
         // Update filename to current hid
         fileName = $"{hid}.glb";
 
-        string fullPath = Path.Combine(persistentPath, fileName);
+        string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
         // Load the GLB file from the Resources folder
         byte[] data = File.ReadAllBytes(fullPath);
@@ -139,10 +146,7 @@ public class ModelFetcher : MonoBehaviour {
         
         
         // Set Model Rotation 
-        if (jsonRotation != null) {
-            targetRotation = JsonUtility.FromJson<Vector3>(jsonRotation);
-            targetModel.transform.localRotation = Quaternion.Euler(targetRotation);
-        }
+        targetModel.transform.localRotation = Quaternion.Euler(rotation);
 
         // Make Components of Model Paintable
         MakePaintableParent(targetModel);
@@ -180,9 +184,9 @@ public class ModelFetcher : MonoBehaviour {
 
     // this is a temp method as in the future Download3DModel should be called by the teams client 
     void Update() {
-        if (Input.GetKeyDown("t")) {
-            Download3DModel(null, "{\"x\": 18, \"y\": 18, \"z\": 30}");
-        }
+        // if (Input.GetKeyDown("t")) {
+        //     Download3DModel(null, "{\"x\": 18, \"y\": 18, \"z\": 30}");
+        // }
         // if (Input.GetKeyDown("y")) {
         //     LoadModel();
         // }

@@ -1,4 +1,4 @@
-name: Unity - Build
+name: Build to Static Web App
 
 on: 
   push:

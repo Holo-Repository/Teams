@@ -1,4 +1,4 @@
-name: Unity - Build
+name: Build WebGL Files to Azure
 
 on: 
   push:

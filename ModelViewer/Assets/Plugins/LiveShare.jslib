@@ -4,14 +4,6 @@ mergeInto(LibraryManager.library, {
     window.parent.syncCurrentRotation(x,y,z);
   },
 
-  SyncDownload: function(pHid) {
-    window.parent.syncDownload(pHid);
-  },
-
-  SyncLoad: function(pHid) {
-    window.parent.syncLoad(pHid);
-  },
-
   HandleScreenshotDataURL: function(dataURL) {
     window.parent.handleScreenshotDataURL(dataURL);
   },

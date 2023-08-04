@@ -60,7 +60,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Build
-          path: build
+          path: ${{ github.workspace }}/build
           
 # UPLOAD BUILD TO AZURE CONTAINER
   upload:
@@ -74,15 +74,53 @@ jobs:
         with:
           name: Build
           path: build
+  
+      - uses: azure/login@v1
+        with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: List files
         run: ls -R
         working-directory: build
-
-      # Upload to azure blob storage 
-      - uses: bacongobbler/azure-blob-storage-upload@main
+        
+      - name: Upload data to blob storage
+        uses: azure/CLI@v1
         with:
-          source_dir: build
-          container_name: test-model-viewer-build
-          connection_string: ${{ secrets.BLOB_CONNECTION_STRING }}
-          extra_args: --content-encoding gzip
-          overwrite: 'true'
+          inlineScript: |
+              az storage blob upload -f ./build/WebGL/WebGL/Build/WebGL.data.gz --account-name unityviewerbuild --container-name test-model-viewer-build --name WebGL/WebGL/Build/WebGL.data.gz --content-encoding gzip
+      
+      - name: Upload framework to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+              az storage blob upload -f ./build/WebGL/WebGL/Build/WebGL.framework.js.gz --account-name unityviewerbuild --container-name test-model-viewer-build --name WebGL/WebGL/Build/WebGL.framework.js.gz --content-encoding gzip
+
+      - name: Upload loader to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+              az storage blob upload -f ./build/WebGL/WebGL/Build/WebGL.loader.js --account-name unityviewerbuild --container-name test-model-viewer-build --name WebGL/WebGL/Build/WebGL.loader.js
+
+      - name: Upload wasm to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+              az storage blob upload -f ./build/WebGL/WebGL/Build/WebGL.wasm.gz --account-name unityviewerbuild --container-name test-model-viewer-build --name WebGL/WebGL/Build/WebGL.wasm.gz --content-encoding gzip 
+
+      - name: Upload StreamingAssets to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+              az storage blob upload-batch --destination test-model-viewer-build --account-name unityviewerbuild --destination-path WebGL/WebGL/StreamingAssets --source ./build/WebGL/WebGL/StreamingAssets
+
+      - name: Upload TemplateData to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+              az storage blob upload-batch --destination test-model-viewer-build --account-name unityviewerbuild --destination-path WebGL/WebGL/TemplateData --source ./build/WebGL/WebGL/TemplateData
+      
+      - name: Upload index to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+              az storage blob upload -f ./build/WebGL/WebGL/index.html --account-name unityviewerbuild --container-name test-model-viewer-build --name WebGL/WebGL/index.html

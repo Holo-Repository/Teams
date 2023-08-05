@@ -107,7 +107,7 @@ public class ModelFetcher : MonoBehaviour {
         // if (pHid != null)
         hid = pHid;
         Debug.Log($"model loading hid: {hid}");
-        hid = "lung1"; 
+        //hid = "lung1"; 
 
         // Update filename to current hid
         fileName = $"{hid}.glb";

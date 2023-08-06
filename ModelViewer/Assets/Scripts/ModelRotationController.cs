@@ -95,9 +95,9 @@ public class ModelRotationController : MonoBehaviour {
         Vector3 r = Transform.localEulerAngles;
         float[] e = new float[] { r.x, r.y, r.z };
 
-        try {
+#if UNITY_WEBGL && !UNITY_EDITOR
             SyncRotation(r.x, r.y, r.z);
-        } catch { }
+#endif
     }
 
 

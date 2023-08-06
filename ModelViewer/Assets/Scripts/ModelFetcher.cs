@@ -128,6 +128,7 @@ public class ModelFetcher : MonoBehaviour {
         // Check hid argument and update
         // if (pHid != null)
         hid = pHid;
+        Debug.Log($"SD testing plz ignore");
         Debug.Log($"model loading hid: {hid}");
         //hid = "lung1"; 
 

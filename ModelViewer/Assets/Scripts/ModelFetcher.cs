@@ -72,13 +72,11 @@ public class ModelFetcher : MonoBehaviour {
 
     private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3)) {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
-
+        
+        //display loading screen
         ProgressBar.enabled = true;
         Background.enabled = true;
         LoadingText.SetActive(true);
-        // ProgressBar.fillAmount = 0.1f;
-        // yield return webRequest.SendWebRequest();
-        // ProgressBar.fillAmount = 0.2f;
 
         // Start the request
         webRequest.SendWebRequest();
@@ -97,14 +95,11 @@ public class ModelFetcher : MonoBehaviour {
 
         if (webRequest.result == UnityWebRequest.Result.Success) {
             byte[] content = webRequest.downloadHandler.data;
-            // ProgressBar.fillAmount = 0.4f;
             File.WriteAllBytes(fullPath, content);
-            // ProgressBar.fillAmount = 0.6f;
             Debug.Log("File downloaded successfully.");
 
             // Display the file path and file size
             FileInfo fileInfo = new FileInfo(fullPath);
-            // ProgressBar.fillAmount = 0.8f;
             Debug.Log($"File path: {fileInfo.FullName}");
             Debug.Log($"File size: {fileInfo.Length} bytes");
         } else {
@@ -112,11 +107,7 @@ public class ModelFetcher : MonoBehaviour {
         }
 
         LoadModel(hid, rotation);
-        // ProgressBar.fillAmount = 1.0f;
 
-        // Destroy(ProgressBar);
-        // Destroy(Background);
-        // Destroy(LoadingText);
         ProgressBar.enabled = false;
         Background.enabled = false;
         LoadingText.SetActive(false);
@@ -167,8 +158,6 @@ public class ModelFetcher : MonoBehaviour {
         // Set Model Properties
         targetModel.name = "Target Model";
         targetModel.transform.localScale *= modelScale;
-        // targetModel.transform.localRotation = Quaternion.Euler(18, 18, 30);
-        
         
         // Set Model Rotation 
         targetModel.transform.localRotation = Quaternion.Euler(rotation);

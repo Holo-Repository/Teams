@@ -48,7 +48,7 @@ public class ModelRotationController : MonoBehaviour {
         var targetRotation = JsonUtility.FromJson<Vector3>(jsonRotation);
         Transform.DORotate(targetRotation, speed, RotateMode.Fast);
 
-        //float[] e = new float[] { targetRotation.x, targetRotation.y, targetRotation.z };
+        // float[] e = new float[] { targetRotation.x, targetRotation.y, targetRotation.z };
         // Debug.Log(e);
     }
 

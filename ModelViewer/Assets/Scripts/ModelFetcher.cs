@@ -41,7 +41,7 @@ public class ModelFetcher : MonoBehaviour {
     public class Model {
         public string hid;
         public Vector3 rotation;
-        public float scale;
+        public Vector3 scale;
     }
 
     public void Start() {
@@ -62,16 +62,17 @@ public class ModelFetcher : MonoBehaviour {
         var model = JsonUtility.FromJson<Model>(jsonModel);
         hid = model.hid;
         Vector3 rotation = model.rotation;
-        float scale = model.scale;
+        Vector3 scale = model.scale;
 
         string url = $"https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/{hid}/download"; 
-        fileName = $"{hid}.glb";
+        // fileName = $"{hid}.glb";
+        fileName = "temp.glb";
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
         StartCoroutine(DownloadFile(url, hid, rotation, scale));
     }
 
-    private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3), float scale = default(float)) {
+    private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3), Vector3 scale = default(Vector3)) {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
         ProgressBar.fillAmount = 0.1f;
         yield return webRequest.SendWebRequest();
@@ -103,13 +104,14 @@ public class ModelFetcher : MonoBehaviour {
 
     
 
-    async void LoadModel(string pHid, Vector3 rotation = default(Vector3), float scale = default(float)) {
+    async void LoadModel(string pHid, Vector3 rotation = default(Vector3), Vector3 scale = default(Vector3)) {
         // Check hid argument and update
         // if (pHid != null)
         hid = pHid;
 
         // Update filename to current hid
-        fileName = $"{hid}.glb";
+        // fileName = $"{hid}.glb";
+        fileName = "temp.glb";
 
         string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
@@ -142,7 +144,7 @@ public class ModelFetcher : MonoBehaviour {
 
         // Set Model Properties
         targetModel.name = "Target Model";
-        targetModel.transform.localScale *= scale;
+        targetModel.transform.localScale = scale;
         targetModel.transform.localRotation = Quaternion.Euler(rotation);
 
         // Make Components of Model Paintable
@@ -181,9 +183,14 @@ public class ModelFetcher : MonoBehaviour {
 
     // this is a temp method as in the future Download3DModel should be called by the teams client 
     void Update() {
-        // if (Input.GetKeyDown("t")) {
-        //     Download3DModel(null, "{\"x\": 18, \"y\": 18, \"z\": 30}");
-        // }
+        if (Input.GetKeyDown("t")) {
+            string input = @"{
+                ""hid"": ""lung1"",
+                ""rotation"": {""x"": 18, ""y"": 18, ""z"": 30},
+                ""scale"": {""x"": 250.0, ""y"": 250.0, ""z"": 250.0}
+            }";
+            Download3DModel(input);
+        }
         // if (Input.GetKeyDown("y")) {
         //     LoadModel();
         // }

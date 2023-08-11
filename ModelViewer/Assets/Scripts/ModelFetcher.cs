@@ -72,20 +72,34 @@ public class ModelFetcher : MonoBehaviour {
 
     private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3)) {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
-        ProgressBar.fillAmount = 0.1f;
-        yield return webRequest.SendWebRequest();
-        ProgressBar.fillAmount = 0.2f;
+        
+        //display loading screen
+        ProgressBar.enabled = true;
+        Background.enabled = true;
+        LoadingText.SetActive(true);
+
+        // Start the request
+        webRequest.SendWebRequest();
+
+        while (!webRequest.isDone)
+        {
+            // Calculate the progress as a float value between 0 and 1
+            float progress = webRequest.downloadProgress;
+
+            Debug.Log($"Request progress: {progress * 100}%");
+
+            ProgressBar.fillAmount = progress;
+            // Wait for the next frame
+            yield return null;
+        }
 
         if (webRequest.result == UnityWebRequest.Result.Success) {
             byte[] content = webRequest.downloadHandler.data;
-            ProgressBar.fillAmount = 0.4f;
             File.WriteAllBytes(fullPath, content);
-            ProgressBar.fillAmount = 0.6f;
             Debug.Log("File downloaded successfully.");
 
             // Display the file path and file size
             FileInfo fileInfo = new FileInfo(fullPath);
-            ProgressBar.fillAmount = 0.8f;
             Debug.Log($"File path: {fileInfo.FullName}");
             Debug.Log($"File size: {fileInfo.Length} bytes");
         } else {
@@ -93,11 +107,10 @@ public class ModelFetcher : MonoBehaviour {
         }
 
         LoadModel(hid, rotation);
-        ProgressBar.fillAmount = 1.0f;
 
-        Destroy(ProgressBar);
-        Destroy(Background);
-        Destroy(LoadingText);
+        ProgressBar.enabled = false;
+        Background.enabled = false;
+        LoadingText.SetActive(false);
     }
 
     
@@ -106,6 +119,7 @@ public class ModelFetcher : MonoBehaviour {
         // Check hid argument and update
         // if (pHid != null)
         hid = pHid;
+        Debug.Log($"SD testing plz ignore");
         Debug.Log($"model loading hid: {hid}");
         //hid = "lung1"; 
 
@@ -144,8 +158,6 @@ public class ModelFetcher : MonoBehaviour {
         // Set Model Properties
         targetModel.name = "Target Model";
         targetModel.transform.localScale *= modelScale;
-        // targetModel.transform.localRotation = Quaternion.Euler(18, 18, 30);
-        
         
         // Set Model Rotation 
         targetModel.transform.localRotation = Quaternion.Euler(rotation);
@@ -186,9 +198,10 @@ public class ModelFetcher : MonoBehaviour {
 
     // this is a temp method as in the future Download3DModel should be called by the teams client 
     void Update() {
-        // if (Input.GetKeyDown("t")) {
-        //     Download3DModel(null, "{\"x\": 18, \"y\": 18, \"z\": 30}");
-        // }
+        if (Input.GetKeyDown("t")) {
+            string input = "{\"hid\": \"lung1\", \"rotation\": [18, 18, 30]}";
+            Download3DModel(input);
+        }
         // if (Input.GetKeyDown("y")) {
         //     LoadModel();
         // }

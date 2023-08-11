@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
+using System.Runtime.InteropServices;
 
 public class ModelScaleController : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class ModelScaleController : MonoBehaviour
     // Get the transform of target object
     [SerializeField] GameObject target;
     Transform Transform { get { return Target.transform; } }
+
+    // Cache
+    [DllImport("__Internal")]
+    private static extern int SyncScale(float x, float y, float z);
+
 
     public GameObject Target { get => target; set { target = value; defaultScale = target.transform.lossyScale; } }
 
@@ -36,10 +42,21 @@ public class ModelScaleController : MonoBehaviour
         }
     }
 
+    public void SetScaleJS(string jsonScale) {
+        var targetScale = JsonUtility.FromJson<Vector3>(jsonScale);
+        Transform.localScale = targetScale;
+    }
+
     void ChangeScaleRelative(float delta) {
         float percentageChange = delta / 100;
         delta = 1 + percentageChange;
         Transform.localScale = Vector3.Scale(Transform.localScale, new Vector3(delta, delta, delta));
+    
+        Vector3 s = Transform.localScale;
+
+        try {
+            SyncScale(s.x, s.y, s.z);
+        } catch { }
     }
 
 

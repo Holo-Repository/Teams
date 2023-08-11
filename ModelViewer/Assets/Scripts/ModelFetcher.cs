@@ -29,7 +29,6 @@ public class ModelFetcher : MonoBehaviour {
     string persistentPath;
     string fullPath;
     string hid;
-    Vector3 targetRotation;
 
     // Cache
     ModelRotationController rotationController;
@@ -42,6 +41,7 @@ public class ModelFetcher : MonoBehaviour {
     public class Model {
         public string hid;
         public Vector3 rotation;
+        public float scale;
     }
 
     public void Start() {
@@ -62,15 +62,16 @@ public class ModelFetcher : MonoBehaviour {
         var model = JsonUtility.FromJson<Model>(jsonModel);
         hid = model.hid;
         Vector3 rotation = model.rotation;
+        float scale = model.scale;
 
         string url = $"https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/{hid}/download"; 
         fileName = $"{hid}.glb";
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
-        StartCoroutine(DownloadFile(url, hid, rotation));
+        StartCoroutine(DownloadFile(url, hid, rotation, scale));
     }
 
-    private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3)) {
+    private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3), float scale = default(float)) {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
         ProgressBar.fillAmount = 0.1f;
         yield return webRequest.SendWebRequest();
@@ -92,7 +93,7 @@ public class ModelFetcher : MonoBehaviour {
             Debug.Log($"Failed to download file. Error: {webRequest.error}");
         }
 
-        LoadModel(hid, rotation);
+        LoadModel(hid, rotation, scale);
         ProgressBar.fillAmount = 1.0f;
 
         Destroy(ProgressBar);
@@ -102,7 +103,7 @@ public class ModelFetcher : MonoBehaviour {
 
     
 
-    async void LoadModel(string pHid, Vector3 rotation = default(Vector3)) {
+    async void LoadModel(string pHid, Vector3 rotation = default(Vector3), float scale = default(float)) {
         // Check hid argument and update
         // if (pHid != null)
         hid = pHid;
@@ -141,11 +142,7 @@ public class ModelFetcher : MonoBehaviour {
 
         // Set Model Properties
         targetModel.name = "Target Model";
-        targetModel.transform.localScale *= modelScale;
-        // targetModel.transform.localRotation = Quaternion.Euler(18, 18, 30);
-        
-        
-        // Set Model Rotation 
+        targetModel.transform.localScale *= scale;
         targetModel.transform.localRotation = Quaternion.Euler(rotation);
 
         // Make Components of Model Paintable

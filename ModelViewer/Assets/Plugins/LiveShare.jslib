@@ -4,6 +4,10 @@ mergeInto(LibraryManager.library, {
     window.syncCurrentRotation(x,y,z);
   },
 
+  SyncScale: function (x,y,z) {
+    window.syncCurrentScale(x,y,z);
+  },
+
   HandleScreenshotDataURL: function(dataURL) {
     window.handleScreenshotDataURL(dataURL);
   },

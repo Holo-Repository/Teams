@@ -54,9 +54,9 @@ public class ModelScaleController : MonoBehaviour
     
         Vector3 s = Transform.localScale;
 
-        try {
+#if UNITY_WEBGL && !UNITY_EDITOR
             SyncScale(s.x, s.y, s.z);
-        } catch { }
+#endif
     }
 
 

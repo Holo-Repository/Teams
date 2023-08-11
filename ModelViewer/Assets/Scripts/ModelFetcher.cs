@@ -39,9 +39,9 @@ public class ModelFetcher : MonoBehaviour {
     // define the model type to pass to the JSON utility
     [Serializable]
     public class Model {
-        public string hid;
+        public string url;
         public Vector3 rotation;
-        public Vector3 scale;
+        public float scale;
     }
 
     public void Start() {
@@ -60,19 +60,20 @@ public class ModelFetcher : MonoBehaviour {
     public void Download3DModel(string jsonModel) {
         // Extract the hid and rotation from the JSON object
         var model = JsonUtility.FromJson<Model>(jsonModel);
-        hid = model.hid;
+        // hid = model.hid;
+        string url = model.url;
         Vector3 rotation = model.rotation;
-        Vector3 scale = model.scale;
+        float scale = model.scale;
 
-        string url = $"https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/{hid}/download"; 
+        // string url = $"https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/{hid}/download"; 
         // fileName = $"{hid}.glb";
-        fileName = "temp.glb";
+        fileName = "downloaded.glb";
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
-        StartCoroutine(DownloadFile(url, hid, rotation, scale));
+        StartCoroutine(DownloadFile(url, rotation, scale));
     }
 
-    private IEnumerator DownloadFile(string url, string hid, Vector3 rotation = default(Vector3), Vector3 scale = default(Vector3)) {
+    private IEnumerator DownloadFile(string url, Vector3 rotation = default(Vector3), float scale = default(float)) {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
         
         //display loading screen
@@ -108,7 +109,7 @@ public class ModelFetcher : MonoBehaviour {
             Debug.Log($"Failed to download file. Error: {webRequest.error}");
         }
 
-        LoadModel(hid, rotation);
+        LoadModel(rotation, scale);
 
         ProgressBar.enabled = false;
         Background.enabled = false;
@@ -117,17 +118,16 @@ public class ModelFetcher : MonoBehaviour {
 
     
 
-    async void LoadModel(string pHid, Vector3 rotation = default(Vector3), Vector3 scale = default(Vector3)) {
+    async void LoadModel(Vector3 rotation = default(Vector3), float scale = default(float)) {
         // Check hid argument and update
         // if (pHid != null)
-        hid = pHid;
-        Debug.Log($"SD testing plz ignore");
-        Debug.Log($"model loading hid: {hid}");
+        // hid = pHid;
+        // Debug.Log($"model loading hid: {hid}");
         //hid = "lung1"; 
 
         // Update filename to current hid
         // fileName = $"{hid}.glb";
-        fileName = "temp.glb";
+        fileName = "downloaded.glb";
 
         string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
@@ -160,7 +160,8 @@ public class ModelFetcher : MonoBehaviour {
 
         // Set Model Properties
         targetModel.name = "Target Model";
-        targetModel.transform.localScale = scale;
+        Debug.Log(scale);
+        targetModel.transform.localScale *= scale;
         targetModel.transform.localRotation = Quaternion.Euler(rotation);
 
         // Make Components of Model Paintable
@@ -201,9 +202,9 @@ public class ModelFetcher : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown("t")) {
             string input = @"{
-                ""hid"": ""lung1"",
+                ""url"": ""https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/lung1/download"",
                 ""rotation"": {""x"": 18, ""y"": 18, ""z"": 30},
-                ""scale"": {""x"": 250.0, ""y"": 250.0, ""z"": 250.0}
+                ""scale"": 0.03
             }";
 
             Download3DModel(input);

@@ -29,13 +29,20 @@ public class ModelFetcher : MonoBehaviour {
     string persistentPath;
     string fullPath;
     string hid;
-    Vector3 targetRotation;
 
     // Cache
     ModelRotationController rotationController;
     ModelScaleController scaleController;
 
     P3dSeamFixer seamFixer;
+    
+    // define the model type to pass to the JSON utility
+    [Serializable]
+    public class Model {
+        public string url;
+        public Vector3 rotation;
+        public float scale;
+    }
 
     public void Start() {
         rotationController = GetComponent<ModelRotationController>();
@@ -50,60 +57,79 @@ public class ModelFetcher : MonoBehaviour {
         //hid = "whole_body_demo";
     }
 
-    public void Download3DModel(string pHid = null, string jsonRotation = null) {
-        // Check hid argument and update
-        if (pHid != null)
-            hid = pHid;
+    public void Download3DModel(string jsonModel) {
+        // Extract the hid and rotation from the JSON object
+        var model = JsonUtility.FromJson<Model>(jsonModel);
+        // hid = model.hid;
+        string url = model.url;
+        Vector3 rotation = model.rotation;
+        float scale = model.scale;
 
-        string url = $"https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/{hid}/download"; 
-        fileName = $"{hid}.glb";
-        fullPath = Path.Combine(persistentPath, fileName);
+        // string url = $"https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/{hid}/download"; 
+        // fileName = $"{hid}.glb";
+        fileName = "downloaded.glb";
+        fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
-        StartCoroutine(DownloadFile(url, hid, jsonRotation));
+        StartCoroutine(DownloadFile(url, rotation, scale));
     }
 
-    private IEnumerator DownloadFile(string url, string hid, string jsonRotation = null) {
-
+    private IEnumerator DownloadFile(string url, Vector3 rotation = default(Vector3), float scale = default(float)) {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
-        ProgressBar.fillAmount = 0.1f;
-        yield return webRequest.SendWebRequest();
-        ProgressBar.fillAmount = 0.2f;
+        
+        //display loading screen
+        ProgressBar.enabled = true;
+        Background.enabled = true;
+        LoadingText.SetActive(true);
+
+        // Start the request
+        webRequest.SendWebRequest();
+
+        while (!webRequest.isDone)
+        {
+            // Calculate the progress as a float value between 0 and 1
+            float progress = webRequest.downloadProgress;
+
+            Debug.Log($"Request progress: {progress * 100}%");
+
+            ProgressBar.fillAmount = progress;
+            // Wait for the next frame
+            yield return null;
+        }
 
         if (webRequest.result == UnityWebRequest.Result.Success) {
             byte[] content = webRequest.downloadHandler.data;
-            ProgressBar.fillAmount = 0.4f;
             File.WriteAllBytes(fullPath, content);
-            ProgressBar.fillAmount = 0.6f;
             Debug.Log("File downloaded successfully.");
 
             // Display the file path and file size
             FileInfo fileInfo = new FileInfo(fullPath);
-            ProgressBar.fillAmount = 0.8f;
             Debug.Log($"File path: {fileInfo.FullName}");
             Debug.Log($"File size: {fileInfo.Length} bytes");
         } else {
             Debug.Log($"Failed to download file. Error: {webRequest.error}");
         }
 
-        LoadModel(hid, jsonRotation);
-        ProgressBar.fillAmount = 1.0f;
+        LoadModel(rotation, scale);
 
-        Destroy(ProgressBar);
-        Destroy(Background);
-        Destroy(LoadingText);
+        ProgressBar.enabled = false;
+        Background.enabled = false;
+        LoadingText.SetActive(false);
     }
 
     
 
-    async void LoadModel(string pHid, string jsonRotation = null) {
+    async void LoadModel(Vector3 rotation = default(Vector3), float scale = default(float)) {
         // Check hid argument and update
         // if (pHid != null)
-        hid = pHid;
+        // hid = pHid;
+        // Debug.Log($"model loading hid: {hid}");
+        //hid = "lung1"; 
 
         // Update filename to current hid
-        fileName = $"{hid}.glb";
+        // fileName = $"{hid}.glb";
+        fileName = "downloaded.glb";
 
-        string fullPath = Path.Combine(persistentPath, fileName);
+        string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
         // Load the GLB file from the Resources folder
         byte[] data = File.ReadAllBytes(fullPath);
@@ -134,15 +160,9 @@ public class ModelFetcher : MonoBehaviour {
 
         // Set Model Properties
         targetModel.name = "Target Model";
-        targetModel.transform.localScale *= modelScale;
-        // targetModel.transform.localRotation = Quaternion.Euler(18, 18, 30);
-        
-        
-        // Set Model Rotation 
-        if (jsonRotation != null) {
-            targetRotation = JsonUtility.FromJson<Vector3>(jsonRotation);
-            targetModel.transform.localRotation = Quaternion.Euler(targetRotation);
-        }
+        Debug.Log(scale);
+        targetModel.transform.localScale *= scale;
+        targetModel.transform.localRotation = Quaternion.Euler(rotation);
 
         // Make Components of Model Paintable
         MakePaintableParent(targetModel);
@@ -181,7 +201,13 @@ public class ModelFetcher : MonoBehaviour {
     // this is a temp method as in the future Download3DModel should be called by the teams client 
     void Update() {
         if (Input.GetKeyDown("t")) {
-            Download3DModel(null, "{\"x\": 18, \"y\": 18, \"z\": 30}");
+            string input = @"{
+                ""url"": ""https://organsegmentation-storageaccessor-app.azurewebsites.net/api/v1/holograms/lung1/download"",
+                ""rotation"": {""x"": 18, ""y"": 18, ""z"": 30},
+                ""scale"": 0.03
+            }";
+
+            Download3DModel(input);
         }
         // if (Input.GetKeyDown("y")) {
         //     LoadModel();

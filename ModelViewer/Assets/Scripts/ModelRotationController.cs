@@ -48,7 +48,7 @@ public class ModelRotationController : MonoBehaviour {
         var targetRotation = JsonUtility.FromJson<Vector3>(jsonRotation);
         Transform.DORotate(targetRotation, speed, RotateMode.Fast);
 
-        //float[] e = new float[] { targetRotation.x, targetRotation.y, targetRotation.z };
+        // float[] e = new float[] { targetRotation.x, targetRotation.y, targetRotation.z };
         // Debug.Log(e);
     }
 
@@ -95,9 +95,9 @@ public class ModelRotationController : MonoBehaviour {
         Vector3 r = Transform.localEulerAngles;
         float[] e = new float[] { r.x, r.y, r.z };
 
-        //try {
-            //SyncRotation(r.x, r.y, r.z);
-        //} catch { }
+#if UNITY_WEBGL && !UNITY_EDITOR
+            SyncRotation(r.x, r.y, r.z);
+#endif
     }
 
 

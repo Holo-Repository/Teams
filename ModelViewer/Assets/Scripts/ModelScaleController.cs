@@ -45,6 +45,8 @@ public class ModelScaleController : MonoBehaviour
     public void SetScaleJS(string jsonScale) {
         var targetScale = JsonUtility.FromJson<Vector3>(jsonScale);
         Transform.localScale = targetScale;
+
+        Debug.Log(targetScale);
     }
 
     void ChangeScaleRelative(float delta) {
@@ -53,7 +55,7 @@ public class ModelScaleController : MonoBehaviour
         Transform.localScale = Vector3.Scale(Transform.localScale, new Vector3(delta, delta, delta));
     
         Vector3 s = Transform.localScale;
-
+        // Debug.Log(s);
 #if UNITY_WEBGL && !UNITY_EDITOR
             SyncScale(s.x, s.y, s.z);
 #endif

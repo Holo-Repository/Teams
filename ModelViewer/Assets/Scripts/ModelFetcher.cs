@@ -193,6 +193,8 @@ public class ModelFetcher : MonoBehaviour {
         target.AddComponent<P3dMaterialCloner>();
         target.AddComponent<MeshCollider>();
 
+        target.AddComponent<TextureGetter>();
+
         seamFixer.AddMesh(target.GetComponent<MeshFilter>().mesh);
         
     }

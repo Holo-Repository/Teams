@@ -12,6 +12,10 @@ mergeInto(LibraryManager.library, {
     window.syncCurrentTexture(Pointer_stringify(name), Pointer_stringify(texture));
   },
 
+  SignalDownloaded: function () {
+    window.signalDownloadedModel();
+  },
+
   HandleScreenshotDataURL: function(dataURL) {
     window.handleScreenshotDataURL(dataURL);
   },

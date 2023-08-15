@@ -44,6 +44,10 @@ public class ModelFetcher : MonoBehaviour {
         public float scale;
     }
 
+    // Cache
+    [DllImport("__Internal")]
+    private static extern void SignalDownloaded();
+
     public void Start() {
         rotationController = GetComponent<ModelRotationController>();
         scaleController = GetComponent<ModelScaleController>();
@@ -114,6 +118,9 @@ public class ModelFetcher : MonoBehaviour {
         ProgressBar.enabled = false;
         Background.enabled = false;
         LoadingText.SetActive(false);
+
+        // sent js message 
+        SignalDownloaded();
     }
 
     
@@ -194,6 +201,8 @@ public class ModelFetcher : MonoBehaviour {
         target.AddComponent<MeshCollider>();
 
         target.AddComponent<TextureGetter>();
+
+        // Debug.Log(target.name);
 
         seamFixer.AddMesh(target.GetComponent<MeshFilter>().mesh);
         

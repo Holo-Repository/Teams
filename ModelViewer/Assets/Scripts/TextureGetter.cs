@@ -8,6 +8,12 @@ public class TextureGetter : MonoBehaviour
 {
     [SerializeField] public Renderer textureRenderer; // Reference to the renderer that has the albedo texture
 
+    // define the newTexture type to pass to the JSON utility
+    [Serializable]
+    public class NewTexture {
+        public string texture;
+    }
+
     // Params
     string currentTexture = null;
 
@@ -15,7 +21,7 @@ public class TextureGetter : MonoBehaviour
 
     // Cache
     [DllImport("__Internal")]
-    private static extern int SyncTexture(string textureBytes);
+    private static extern string SyncTexture(string gameObjectName, string textureBytes);
 
     private void Awake()
     {
@@ -37,11 +43,13 @@ public class TextureGetter : MonoBehaviour
         // Convert byte array to base64 string
         string newBase64Texture = Convert.ToBase64String(textureBytes);
 
-        // TODO: sync base64Texture to liveshare
+        // sync base64Texture to liveshare
         if (currentTexture!=newBase64Texture)
-        {
+        {             
             currentTexture = newBase64Texture;
-            SyncTexture(currentTexture);
+#if UNITY_WEBGL && !UNITY_EDITOR
+            SyncTexture(gameObject.name, currentTexture);
+#endif
         }
     }
 
@@ -78,10 +86,12 @@ public class TextureGetter : MonoBehaviour
     }
 
     private void SetTextureJS(string albedoTexture)
-    {   
+    {       
         Debug.Log("JS setting texture");
 
-        byte[] textureBytes = Convert.FromBase64String(albedoTexture);      
+        var newTexture = JsonUtility.FromJson<NewTexture>(albedoTexture);
+        byte[] textureBytes = Convert.FromBase64String(newTexture.texture);      
+
         paintableTexture.LoadFromData(textureBytes);
 
     }

@@ -93,8 +93,6 @@ public class ModelFetcher : MonoBehaviour {
             // Calculate the progress as a float value between 0 and 1
             float progress = webRequest.downloadProgress;
 
-            Debug.Log($"Request progress: {progress * 100}%");
-
             ProgressBar.fillAmount = progress;
             // Wait for the next frame
             yield return null;
@@ -107,8 +105,6 @@ public class ModelFetcher : MonoBehaviour {
 
             // Display the file path and file size
             FileInfo fileInfo = new FileInfo(fullPath);
-            Debug.Log($"File path: {fileInfo.FullName}");
-            Debug.Log($"File size: {fileInfo.Length} bytes");
         } else {
             Debug.Log($"Failed to download file. Error: {webRequest.error}");
         }

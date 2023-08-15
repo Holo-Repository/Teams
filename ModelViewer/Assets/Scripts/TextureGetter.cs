@@ -1,33 +1,36 @@
 using UnityEngine;
 
 using System;
-using System.Text.Json;
-using System.IO;
-
+using System.Runtime.InteropServices;
 using PaintIn3D;
 
 public class TextureGetter : MonoBehaviour
 {
-    [SerializeField] public Renderer renderer; // Reference to the renderer that has the albedo texture
+    [SerializeField] public Renderer textureRenderer; // Reference to the renderer that has the albedo texture
 
     // Params
     string currentTexture = null;
 
     private P3dPaintableTexture paintableTexture;
+
+    // Cache
+    [DllImport("__Internal")]
+    private static extern int SyncTexture(string textureBytes);
+
     private void Awake()
     {
         paintableTexture = GetComponent<P3dPaintableTexture>();
-        renderer = GetComponent<Renderer>();
+        textureRenderer = GetComponent<Renderer>();
     }
     public void SetTexture()
     {
-        if (renderer == null)
+        if (textureRenderer == null)
         {
             Debug.LogError("Renderer with albedo texture not assigned!");
             return;
         }
 
-        Texture2D texture = GetAlbedoTexture(renderer);
+        Texture2D texture = GetAlbedoTexture(textureRenderer);
 
         byte[] textureBytes = texture.EncodeToPNG();
 
@@ -38,10 +41,7 @@ public class TextureGetter : MonoBehaviour
         if (currentTexture!=newBase64Texture)
         {
             currentTexture = newBase64Texture;
-            Debug.Log("New texture");
-            SetTextureJS(currentTexture);
-        }else{
-            Debug.Log("Same texture");
+            SyncTexture(currentTexture);
         }
     }
 

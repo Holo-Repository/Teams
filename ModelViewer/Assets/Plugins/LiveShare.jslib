@@ -8,6 +8,10 @@ mergeInto(LibraryManager.library, {
     window.syncCurrentScale(x,y,z);
   },
 
+  SyncTexture: function (texture) {
+    window.syncCurrentTexture(texture);
+  },
+
   HandleScreenshotDataURL: function(dataURL) {
     window.handleScreenshotDataURL(dataURL);
   },

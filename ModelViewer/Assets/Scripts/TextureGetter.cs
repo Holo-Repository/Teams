@@ -8,42 +8,41 @@ using PaintIn3D;
 
 public class TextureGetter : MonoBehaviour
 {
+    [SerializeField] public Renderer renderer; // Reference to the renderer that has the albedo texture
 
-    public class Model {
-        public string url;
-    }
-
-    [SerializeField] public Renderer rendererWithAlbedo; // Reference to the renderer that has the albedo texture
+    // Params
+    string currentTexture = null;
 
     private P3dPaintableTexture paintableTexture;
     private void Awake()
     {
         paintableTexture = GetComponent<P3dPaintableTexture>();
-        rendererWithAlbedo = GetComponent<Renderer>();
+        renderer = GetComponent<Renderer>();
     }
-    public void SaveAlbedoToPNG()
+    public void SetTexture()
     {
-        if (rendererWithAlbedo == null)
+        if (renderer == null)
         {
             Debug.LogError("Renderer with albedo texture not assigned!");
             return;
         }
 
-        Texture2D albedoTexture = GetAlbedoTexture(rendererWithAlbedo);
+        Texture2D texture = GetAlbedoTexture(renderer);
 
-        if (albedoTexture == null)
-        {
-            Debug.LogError("Albedo texture not found!");
-            return;
-        }
+        byte[] textureBytes = texture.EncodeToPNG();
 
-        byte[] textureBytes = albedoTexture.EncodeToPNG();
-
-        // to json
         // Convert byte array to base64 string
-        string base64Texture = Convert.ToBase64String(textureBytes);
+        string newBase64Texture = Convert.ToBase64String(textureBytes);
 
-        SetAlbedoTexture(base64Texture);
+        // TODO: sync base64Texture to liveshare
+        if (currentTexture!=newBase64Texture)
+        {
+            currentTexture = newBase64Texture;
+            Debug.Log("New texture");
+            SetTextureJS(currentTexture);
+        }else{
+            Debug.Log("Same texture");
+        }
     }
 
     private Texture2D GetAlbedoTexture(Renderer renderer)
@@ -78,16 +77,11 @@ public class TextureGetter : MonoBehaviour
         return null;
     }
 
-    private void SetAlbedoTexture(string albedoTexture)
+    private void SetTextureJS(string albedoTexture)
     {   
-        Debug.Log("albedoTexture apply");
+        Debug.Log("JS setting texture");
 
-        byte[] textureBytes = Convert.FromBase64String(albedoTexture);
-
-        // string imagePath = Path.Combine(Application.persistentDataPath, "image.png");
-        // Texture2D texture = new Texture2D(2, 2); // Create a Texture2D object
-        // byte[] imageBytes = File.ReadAllBytes(imagePath); 
-        
+        byte[] textureBytes = Convert.FromBase64String(albedoTexture);      
         paintableTexture.LoadFromData(textureBytes);
 
     }
@@ -96,7 +90,7 @@ public class TextureGetter : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            SaveAlbedoToPNG();
+            SetTexture();
         } 
     
 

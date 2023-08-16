@@ -23,13 +23,15 @@ public class TextureGetter : MonoBehaviour
     [DllImport("__Internal")]
     private static extern string SyncTexture(string gameObjectName, string textureBytes);
 
-    private void Awake()
-    {
-        paintableTexture = GetComponent<P3dPaintableTexture>();
-        textureRenderer = GetComponent<Renderer>();
-    }
+    // private void Awake()
+    // {
+    //     paintableTexture = GetComponent<P3dPaintableTexture>();
+    //     textureRenderer = GetComponent<Renderer>();
+    // }
     public void SetTexture()
     {
+        textureRenderer = GetComponent<Renderer>();
+
         if (textureRenderer == null)
         {
             Debug.LogError("Renderer with albedo texture not assigned!");
@@ -88,6 +90,8 @@ public class TextureGetter : MonoBehaviour
     private void SetTextureJS(string albedoTexture)
     {       
         Debug.Log("JS setting texture");
+
+        paintableTexture = GetComponent<P3dPaintableTexture>();
 
         var newTexture = JsonUtility.FromJson<NewTexture>(albedoTexture);
         byte[] textureBytes = Convert.FromBase64String(newTexture.texture);      

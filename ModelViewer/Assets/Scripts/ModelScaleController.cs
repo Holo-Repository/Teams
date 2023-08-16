@@ -69,7 +69,6 @@ public class ModelScaleController : MonoBehaviour
 
     }
 
-
     void OnGUI() {
         ChangeScaleRelative(speed * Input.mouseScrollDelta.y);
     }

@@ -115,6 +115,8 @@ public class ModelFetcher : MonoBehaviour {
         Background.enabled = false;
         LoadingText.SetActive(false);
 
+        yield return new WaitForEndOfFrame();
+
         // sent js message 
         SignalDownloaded();
     }
@@ -202,6 +204,7 @@ public class ModelFetcher : MonoBehaviour {
 
         seamFixer.AddMesh(target.GetComponent<MeshFilter>().mesh);
         
+
     }
 
 

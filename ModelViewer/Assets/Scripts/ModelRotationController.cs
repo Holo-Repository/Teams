@@ -41,6 +41,7 @@ public class ModelRotationController : MonoBehaviour {
 
     public void updateDisplayRotation() {
         Vector3 displayRotation = globalRotation + localRotation;   
+        Debug.Log("Display Rotation: " + displayRotation);
         Transform.DORotate(displayRotation, speed, RotateMode.Fast);
     }
 
@@ -90,6 +91,8 @@ public class ModelRotationController : MonoBehaviour {
         isRotating = false;
 
         Vector3 r = Transform.localEulerAngles;
+        globalRotation = r;
+
         r -= localRotation;
 #if UNITY_WEBGL && !UNITY_EDITOR
             SyncRotation(r.x, r.y, r.z);

@@ -30,7 +30,7 @@ HoloCollab is a cutting-edge collaboration platform designed to seamlessly integ
 
 ### Prerequisites
 - Ensure you have the latest version of Unity installed.
-- Microsoft Teams integration requires a valid Teams account.
+- Microsoft Teams integration requires a valid Teams account and that your account is allowed to sideload apps.
 
 ### Installation
 1. Clone the repository: git clone https://github.com/[username]/HoloCollab.git
@@ -40,10 +40,8 @@ HoloCollab is a cutting-edge collaboration platform designed to seamlessly integ
 ## Usage
 
 ### Manipulating a Model
-1. Models can quickly be moved around 90 degrees in all directions with the WASD keys.
-2. Models can be rotated clockwise and counterclockwise 90 degrees with the Q and E keys, respectively.
-3. Models can be moved by right-clicking and dragging on the screen.
-4. Zoom-in and out using the mouse wheel or with an equivalent touchpad motion.
+1. Models can be moved by right-clicking and dragging on the screen.
+2. Zoom in and out using the mouse wheel or with an equivalent touchpad motion.
 
 ### Loading a Model
 1. Open the HoloCollab platform within Microsoft Teams.
@@ -58,7 +56,7 @@ HoloCollab is a cutting-edge collaboration platform designed to seamlessly integ
 ### Annotating on a Model
 1. Annotations can be made using the left-click button on your mouse or touchpad device.
 2. Click and drag on the model's surface to draw or annotate.
-3. Only drawing with a single brush type with red paint is supported at this time.
+3. Only drawing with a single brush type with red paint is supported for now.
 
 ## Known Issues
 - Some 3D model formats may not be fully compatible with the direct annotation feature. We recommend testing your model beforehand.

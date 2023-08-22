@@ -19,8 +19,8 @@ public class ModelScaleController : MonoBehaviour
     Vector3 currentScale;
 
     // Cache
-    // [DllImport("__Internal")]
-    // private static extern int SyncScale(float x, float y, float z);
+    [DllImport("__Internal")]
+    private static extern int SyncScale(float x, float y, float z);
 
 
     public GameObject Target { get => target; set { target = value; defaultScale = target.transform.lossyScale; } }
@@ -61,10 +61,10 @@ public class ModelScaleController : MonoBehaviour
         if (currentScale != s)
         {
             currentScale = s;
-// #if UNITY_WEBGL && !UNITY_EDITOR
-//             SyncScale(s.x, s.y, s.z);
-// #endif
-            // Debug.Log(s);
+#if UNITY_WEBGL && !UNITY_EDITOR
+            SyncScale(s.x, s.y, s.z);
+#endif
+            Debug.Log(s);
         }
 
     }

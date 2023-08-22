@@ -7,11 +7,17 @@ using NativeWebSocket;
 
 public class MotionInputSocket : MonoBehaviour
 {
+  [SerializeField] GameObject target;
+
+  public GameObject Target { get => target; set => target = value; }
+
   WebSocket websocket;
 
   // Start is called before the first frame update
   async void Start()
   {
+    // The web socker server will need to be changed base on the IP address of the computer running the server
+    // This is a hard coded IP address for the computer running the server during development   
     websocket = new WebSocket("ws://127.0.0.1:33705");
 
     websocket.OnOpen += () =>
@@ -31,11 +37,7 @@ public class MotionInputSocket : MonoBehaviour
 
     websocket.OnMessage += (bytes) =>
     {
-      Debug.Log(System.Text.Encoding.UTF8.GetString(bytes));
-
-      // getting the message as a string
-      // var message = System.Text.Encoding.UTF8.GetString(bytes);
-      // Debug.Log("OnMessage! " + message);
+      target.GetComponent<ModelRotationController>().SetRotationMI(System.Text.Encoding.UTF8.GetString(bytes));
     };
 
     // waiting for messages

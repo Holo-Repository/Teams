@@ -39,6 +39,12 @@ HoloCollab is a cutting-edge collaboration platform designed to seamlessly integ
 
 ## Usage
 
+### Manipulating a Model
+1. Models can quickly be moved around 90 degrees in all directions with the WASD keys.
+2. Models can be rotated clockwise and counterclockwise 90 degrees with the Q and E keys, respectively.
+3. Models can be moved by right-clicking and dragging on the screen.
+4. Zoom-in and out using the mouse wheel or with an equivalent touchpad motion.
+
 ### Loading a Model
 1. Open the HoloCollab platform within Microsoft Teams.
 2. Provide a directly accessible URL to load your desired model.

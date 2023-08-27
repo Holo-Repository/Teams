@@ -104,21 +104,21 @@ public class ModelRotationController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         // 90 Degree Rotation Handling
-        if (Input.GetKeyDown("w")) {
-            Rotate90("up");
-        } else if (Input.GetKeyDown("s")) {
-            Rotate90("down");
-        } else if (Input.GetKeyDown("a")) {
-            Rotate90("left");
-        } else if (Input.GetKeyDown("d")) {
-            Rotate90("right");
-        } else if (Input.GetKeyDown("q")) {
-            Rotate90("clock");
-        } else if (Input.GetKeyDown("e")) {
-            Rotate90("cClock");
-        } else if (Input.GetKeyDown("space")) {
-            ResetRotation();
-        }
+        // if (Input.GetKeyDown("w")) {
+        //     Rotate90("up");
+        // } else if (Input.GetKeyDown("s")) {
+        //     Rotate90("down");
+        // } else if (Input.GetKeyDown("a")) {
+        //     Rotate90("left");
+        // } else if (Input.GetKeyDown("d")) {
+        //     Rotate90("right");
+        // } else if (Input.GetKeyDown("q")) {
+        //     Rotate90("clock");
+        // } else if (Input.GetKeyDown("e")) {
+        //     Rotate90("cClock");
+        // } else if (Input.GetKeyDown("space")) {
+        //     ResetRotation();
+        // }
 
         //Click and Drag Handling
         if (Input.GetMouseButton(1)) {

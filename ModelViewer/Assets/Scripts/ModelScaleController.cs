@@ -15,6 +15,9 @@ public class ModelScaleController : MonoBehaviour
     [SerializeField] GameObject target;
     Transform Transform { get { return Target.transform; } }
 
+    // Params
+    Vector3 currentScale;
+
     // Cache
     [DllImport("__Internal")]
     private static extern int SyncScale(float x, float y, float z);
@@ -46,7 +49,7 @@ public class ModelScaleController : MonoBehaviour
         var targetScale = JsonUtility.FromJson<Vector3>(jsonScale);
         Transform.localScale = targetScale;
 
-        Debug.Log(targetScale);
+        // Debug.Log(targetScale);
     }
 
     void ChangeScaleRelative(float delta) {
@@ -55,12 +58,16 @@ public class ModelScaleController : MonoBehaviour
         Transform.localScale = Vector3.Scale(Transform.localScale, new Vector3(delta, delta, delta));
     
         Vector3 s = Transform.localScale;
-        // Debug.Log(s);
+        if (currentScale != s)
+        {
+            currentScale = s;
 #if UNITY_WEBGL && !UNITY_EDITOR
             SyncScale(s.x, s.y, s.z);
 #endif
-    }
+            // Debug.Log(s);
+        }
 
+    }
 
     void OnGUI() {
         ChangeScaleRelative(speed * Input.mouseScrollDelta.y);

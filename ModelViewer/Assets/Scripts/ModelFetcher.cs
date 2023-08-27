@@ -44,6 +44,10 @@ public class ModelFetcher : MonoBehaviour {
         public float scale;
     }
 
+    // Cache
+    [DllImport("__Internal")]
+    private static extern void SignalDownloaded();
+
     public void Start() {
         rotationController = GetComponent<ModelRotationController>();
         scaleController = GetComponent<ModelScaleController>();
@@ -89,8 +93,6 @@ public class ModelFetcher : MonoBehaviour {
             // Calculate the progress as a float value between 0 and 1
             float progress = webRequest.downloadProgress;
 
-            Debug.Log($"Request progress: {progress * 100}%");
-
             ProgressBar.fillAmount = progress;
             // Wait for the next frame
             yield return null;
@@ -103,8 +105,6 @@ public class ModelFetcher : MonoBehaviour {
 
             // Display the file path and file size
             FileInfo fileInfo = new FileInfo(fullPath);
-            Debug.Log($"File path: {fileInfo.FullName}");
-            Debug.Log($"File size: {fileInfo.Length} bytes");
         } else {
             Debug.Log($"Failed to download file. Error: {webRequest.error}");
         }
@@ -114,6 +114,11 @@ public class ModelFetcher : MonoBehaviour {
         ProgressBar.enabled = false;
         Background.enabled = false;
         LoadingText.SetActive(false);
+
+        yield return new WaitForEndOfFrame();
+
+        // sent js message 
+        SignalDownloaded();
     }
 
     
@@ -193,8 +198,13 @@ public class ModelFetcher : MonoBehaviour {
         target.AddComponent<P3dMaterialCloner>();
         target.AddComponent<MeshCollider>();
 
+        target.AddComponent<TextureGetter>();
+
+        // Debug.Log(target.name);
+
         seamFixer.AddMesh(target.GetComponent<MeshFilter>().mesh);
         
+
     }
 
 

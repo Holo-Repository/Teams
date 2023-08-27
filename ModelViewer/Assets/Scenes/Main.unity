@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 138836409}
   - component: {fileID: 138836408}
   - component: {fileID: 138836407}
+  - component: {fileID: 138836410}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -302,6 +303,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &138836410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138836405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6a1934513dda8b4084b61aea0857ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &250726280
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,6 +952,7 @@ GameObject:
   - component: {fileID: 926056461}
   - component: {fileID: 926056462}
   - component: {fileID: 926056463}
+  - component: {fileID: 926056464}
   m_Layer: 0
   m_Name: Target Manager
   m_TagString: Untagged
@@ -1030,6 +1044,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveButton: {fileID: 1818348649151174119}
   deleteButton: {fileID: 720499141}
+--- !u!114 &926056464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926056458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04bfefc584aca7341b19b4cc3a8e1e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 926056458}
 --- !u!1 &977430660
 GameObject:
   m_ObjectHideFlags: 0
